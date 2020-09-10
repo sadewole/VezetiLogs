@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
-import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import {
@@ -9,6 +8,8 @@ import {
   FormHelperText,
   TextField,
   makeStyles,
+  MenuItem,
+  InputLabel,
   Select
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
@@ -31,51 +32,65 @@ const VezetiLogin = ({ className, ...rest }) => {
         orgId: '3456',
         email: 'demo@devias.io',
         password: 'Password123',
-        mobile: '0908986890',
+        mobile: '09089868906',
         pin: '3546',
         submit: null
       }}
-      validationSchema={Yup.object().shape({
-        orgId: Yup.string()
-          .max(255)
-          .required('Organization Id is required'),
-        email: Yup.string()
-          .email('Must be a valid email')
-          .max(255)
-          .required('Email is required'),
-        password: Yup.string()
-          .max(255)
-          .required('Password is required'),
-        mobile: Yup.string()
-          .matches(
-            /^\(?([0-9]{3})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/,
-            'Must be a valid phone number'
-          )
-          .required('Mobile number is required'),
-        pin: Yup.string()
-          .matches(/^[0-9]*$/, 'Pin is not valid')
-          .max(5)
-          .required('Pin is required')
-      })}
+      validate={(values, props) => {
+        let errors = {};
+
+        if (!values.orgId) {
+          errors.orgId = 'Organization Id is required';
+        }
+
+        if (values.loginType === 'email') {
+          if (!values.email) {
+            errors.email = 'Email is required';
+          } else if (!/^\S+@\S+$/.test(values.email)) {
+            errors.email = 'Must be a valid email';
+          }
+
+          if (!values.password) {
+            errors.password = 'Password is required';
+          }
+        } else {
+          if (!values.pin) {
+            errors.pin = 'Pin is required';
+          } else if (!/^[0-9]*$/.test(values.pin)) {
+            errors.pin = 'Pin is not valid';
+          }
+
+          if (!values.mobile) {
+            errors.mobile = 'Phone number is required';
+          } else if (
+            !/^\(?([0-9]{3})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(
+              values.mobile
+            )
+          ) {
+            errors.mobile = 'Must be a valid phone number';
+          }
+        }
+
+        return errors;
+      }}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
-
           let data;
 
-          if(values.loginType === 'email'){
+          if (values.loginType === 'email') {
             data = {
               typeEmailOrPhone: 'email',
               orgId: values.orgId,
               email: values.email,
               password: values.password
-            }
-          }else{
+            };
+          } else {
             data = {
               typeEmailOrPhone: 'mobile',
               orgId: values.orgId,
               mobile: values.mobile,
               pin: values.pin
-            }
+            };
           }
           await login(data);
 
@@ -108,18 +123,19 @@ const VezetiLogin = ({ className, ...rest }) => {
           className={clsx(classes.root, className)}
           {...rest}
         >
+          <InputLabel id="label" className="mb-3">
+            Login Type
+          </InputLabel>
           <Select
-            label="Login type"
+            labelId="label"
             fullWidth
             name="loginType"
-            margin="normal"
             value={values.loginType}
             onChange={handleChange}
             variant="outlined"
-            native
           >
-            <option value="email">Email</option>
-            <option value="mobile">Mobile</option>
+            <MenuItem value="email">Email</MenuItem>
+            <MenuItem value="mobile">Mobile</MenuItem>
           </Select>
           <TextField
             error={Boolean(touched.orgId && errors.orgId)}
@@ -197,30 +213,30 @@ const VezetiLogin = ({ className, ...rest }) => {
               />
             </Fragment>
           )}
-            {errors.submit && (
-              <Box mt={3}>
-                <FormHelperText error>{errors.submit}</FormHelperText>
-              </Box>
-            )}
-            <Box mt={2}>
-              <Button
-                color="secondary"
-                disabled={isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
-                Log In
-                </Button>
+          {errors.submit && (
+            <Box mt={3}>
+              <FormHelperText error>{errors.submit}</FormHelperText>
             </Box>
-            <Box mt={2}>
-              <Alert severity="info">
-                <div>
-                  Use <b>demo@devias.io</b> and password <b>Password123</b>
-                </div>
-              </Alert>
-            </Box>
+          )}
+          <Box mt={2}>
+            <Button
+              color="secondary"
+              disabled={isSubmitting}
+              fullWidth
+              size="large"
+              type="submit"
+              variant="contained"
+            >
+              Log In
+            </Button>
+          </Box>
+          <Box mt={2}>
+            <Alert severity="info">
+              <div>
+                Use <b>demo@devias.io</b> and password <b>Password123</b>
+              </div>
+            </Alert>
+          </Box>
         </form>
       )}
     </Formik>

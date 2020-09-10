@@ -38,15 +38,31 @@ const VezetiRegister = ({ className, ...rest }) => {
         submit: null
       }}
       validationSchema={Yup.object().shape({
+        mobile: Yup.string()
+          .matches(
+            /^\(?([0-9]{3})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/,
+            'Must be a valid phone number'
+          )
+          .required('Mobile number is required'),
         email: Yup.string()
           .email('Must be a valid email')
           .max(255)
           .required('Email is required'),
-        name: Yup.string()
+        firstName: Yup.string()
           .max(255)
-          .required('Name is required'),
+          .required('First Name is required'),
+        lastName: Yup.string()
+          .max(255)
+          .required('Last Name is required'),
+        orgId: Yup.string()
+          .max(255)
+          .required('Organiztion Id is required'),
         password: Yup.string()
-          .min(7)
+          .min(8, 'Must be atleast 8 characters long')
+          .matches(
+            /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
+            'Must contain atleast a uppercase, a lowercase, a number and a special character'
+          )
           .max(255)
           .required('Password is required'),
         policy: Yup.boolean().oneOf([true], 'This field must be checked')
@@ -144,6 +160,19 @@ const VezetiRegister = ({ className, ...rest }) => {
             onChange={handleChange}
             type="email"
             value={values.email}
+            variant="outlined"
+          />
+          <TextField
+            error={Boolean(touched.mobile && errors.mobile)}
+            fullWidth
+            helperText={touched.mobile && errors.mobile}
+            label="Mobile Number"
+            margin="normal"
+            name="mobile"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            type="text"
+            value={values.mobile}
             variant="outlined"
           />
           <TextField
