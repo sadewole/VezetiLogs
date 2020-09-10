@@ -2,13 +2,13 @@ import React, { createContext, useEffect, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
 import SplashScreen from 'src/components/SplashScreen';
 import axios from 'src/utils/axios';
+import { vezetiConfig } from 'src/config';
 
 const url = 'https://secure.vezeti.net/api/v3/';
-const usernameAuth = 'samueladewole15@gmail.com';
-const passwordAuth = 'R0ss2B0#!M0ver#2';
-const token = Buffer.from(`${usernameAuth}:${passwordAuth}`, 'utf8').toString(
-  'base64'
-);
+const token = Buffer.from(
+  `${vezetiConfig.usernameAuth}:${vezetiConfig.passwordAuth}`,
+  'utf8'
+).toString('base64');
 const configHeader = {
   headers: {
     Authorization: `Basic ${token}`
@@ -96,12 +96,8 @@ const AuthContext = createContext({
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialAuthState);
 
-  const login = async (data) => {
-    const response = await axios.post(
-      `${url}login/`,
-      data,
-      configHeader
-    );
+  const login = async data => {
+    const response = await axios.post(`${url}login/`, data, configHeader);
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
@@ -118,12 +114,8 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const register = async (data) => {
-    const response = await axios.post(
-      `${url}signup/`,
-      data,
-      configHeader
-    );
+  const register = async data => {
+    const response = await axios.post(`${url}signup/`, data, configHeader);
     const { accessToken, user } = response.data;
 
     window.localStorage.setItem('accessToken', accessToken);

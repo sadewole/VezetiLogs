@@ -53,7 +53,22 @@ const VezetiRegister = ({ className, ...rest }) => {
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
-          await register(values.email, values.name, values.password);
+          const {
+            firstName,
+            lastName,
+            password,
+            orgId,
+            mobile,
+            email
+          } = values;
+          await register({
+            firstName,
+            lastName,
+            password,
+            orgId,
+            mobile,
+            email
+          });
 
           if (isMountedRef.current) {
             setStatus({ success: true });
