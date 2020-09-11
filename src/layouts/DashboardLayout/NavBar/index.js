@@ -377,28 +377,17 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   }, [location.pathname]);
 
   const content = (
-    <Box
-      height="100%"
-      display="flex"
-      flexDirection="column"
-    >
+    <Box height="100%" display="flex" flexDirection="column">
       <PerfectScrollbar options={{ suppressScrollX: true }}>
         <Hidden lgUp>
-          <Box
-            p={2}
-            display="flex"
-            justifyContent="center"
-          >
+          <Box p={2} display="flex" justifyContent="center">
             <RouterLink to="/">
               <Logo />
             </RouterLink>
           </Box>
         </Hidden>
         <Box p={2}>
-          <Box
-            display="flex"
-            justifyContent="center"
-          >
+          <Box display="flex" justifyContent="center">
             <RouterLink to="/app/account">
               <Avatar
                 alt="User"
@@ -407,10 +396,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               />
             </RouterLink>
           </Box>
-          <Box
-            mt={2}
-            textAlign="center"
-          >
+          <Box mt={2} textAlign="center">
             <Link
               component={RouterLink}
               to="/app/account"
@@ -418,36 +404,26 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               color="textPrimary"
               underline="none"
             >
-              {user.name}
+              {user.userFirstName} {user.userLastName}
             </Link>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-            >
-              Your tier:
-              {' '}
-              <Link
-                component={RouterLink}
-                to="/pricing"
-              >
-                {user.tier}
+            <Typography variant="body2" color="textSecondary">
+              Account Status:
+              <Link component={RouterLink} to="/pricing">
+                {user.userAccountStatus}
               </Link>
             </Typography>
           </Box>
         </Box>
         <Divider />
         <Box p={2}>
-          {sections.map((section) => (
+          {sections.map(section => (
             <List
               key={section.subheader}
-              subheader={(
-                <ListSubheader
-                  disableGutters
-                  disableSticky
-                >
+              subheader={
+                <ListSubheader disableGutters disableSticky>
                   {section.subheader}
                 </ListSubheader>
-              )}
+              }
             >
               {renderNavItems({
                 items: section.items,
@@ -458,15 +434,8 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         </Box>
         <Divider />
         <Box p={2}>
-          <Box
-            p={2}
-            borderRadius="borderRadius"
-            bgcolor="background.dark"
-          >
-            <Typography
-              variant="h6"
-              color="textPrimary"
-            >
+          <Box p={2} borderRadius="borderRadius" bgcolor="background.dark">
+            <Typography variant="h6" color="textPrimary">
               Need Help?
             </Typography>
             <Link
