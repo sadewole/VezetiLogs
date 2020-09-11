@@ -5,6 +5,7 @@ import { reducer as formReducer } from 'redux-form';
 import { reducer as kanbanReducer } from 'src/slices/kanban';
 import { reducer as mailReducer } from 'src/slices/mail';
 import { reducer as notificationReducer } from 'src/slices/notification';
+import { reducer as forgotAuthReducer } from 'src/slices/forgotAuth';
 
 const rootReducer = combineReducers({
   calendar: calendarReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   form: formReducer,
   kanban: kanbanReducer,
   mail: mailReducer,
-  notifications: notificationReducer
+  notifications: notificationReducer,
+  forgotAuth: forgotAuthReducer
 });
 
 export default rootReducer;

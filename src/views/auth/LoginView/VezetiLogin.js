@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
 import clsx from 'clsx';
+import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import {
@@ -7,6 +8,7 @@ import {
   Button,
   FormHelperText,
   TextField,
+  Link,
   makeStyles,
   MenuItem,
   InputLabel,
@@ -29,11 +31,11 @@ const VezetiLogin = ({ className, ...rest }) => {
     <Formik
       initialValues={{
         loginType: 'email',
-        orgId: '3456',
-        email: 'demo@devias.io',
-        password: 'Password123',
-        mobile: '09089868906',
-        pin: '3546',
+        orgId: '',
+        email: '',
+        password: '',
+        mobile: '',
+        pin: '',
         submit: null
       }}
       validate={(values, props) => {
@@ -123,7 +125,7 @@ const VezetiLogin = ({ className, ...rest }) => {
           className={clsx(classes.root, className)}
           {...rest}
         >
-          <InputLabel id="label" className="mb-3">
+          <InputLabel id="label" mb={2}>
             Login Type
           </InputLabel>
           <Select
@@ -181,6 +183,14 @@ const VezetiLogin = ({ className, ...rest }) => {
                 value={values.password}
                 variant="outlined"
               />
+              <Link
+                component={RouterLink}
+                to="/forgot-password"
+                variant="body2"
+                color="textSecondary"
+              >
+                Forgot password?
+              </Link>
             </Fragment>
           ) : (
             <Fragment>
@@ -211,6 +221,14 @@ const VezetiLogin = ({ className, ...rest }) => {
                 value={values.pin}
                 variant="outlined"
               />
+              <Link
+                component={RouterLink}
+                to="/forgot-pin"
+                variant="body2"
+                color="textSecondary"
+              >
+                Forgot pin?
+              </Link>
             </Fragment>
           )}
           {errors.submit && (

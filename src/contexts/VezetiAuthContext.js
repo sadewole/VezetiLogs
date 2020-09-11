@@ -4,17 +4,17 @@ import SplashScreen from 'src/components/SplashScreen';
 import axios from 'axios';
 import { vezetiConfig } from 'src/config';
 
-const url = 'https://secure.vezeti.net/api/v3/';
-const token = Buffer.from(
-  `${vezetiConfig.usernameAuth}:${vezetiConfig.passwordAuth}`,
-  'utf8'
-).toString('base64');
-const configHeader = {
-  'Content-Type': 'application/json',
-  headers: {
-    Authorization: `Basic ${token}`
-  }
-};
+const url = 'https://secure.vezeti.net/test-api/v3/';
+const base64Token = btoa(
+  `${vezetiConfig.usernameAuth}:${vezetiConfig.passwordAuth}`
+);
+if (base64Token) {
+  localStorage.setItem('base64Token', base64Token);
+  axios.defaults.headers.common.Authorization = `Basic ${base64Token}`;
+} else {
+  localStorage.removeItem('base64Token');
+  delete axios.defaults.headers.common.Authorization;
+}
 
 const initialAuthState = {
   isAuthenticated: false,
@@ -33,16 +33,6 @@ const isValidToken = accessToken => {
   return decoded.exp > currentTime;
 };
 
-const setSession = accessToken => {
-  if (accessToken) {
-    localStorage.setItem('accessToken', accessToken);
-    axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-  } else {
-    localStorage.removeItem('accessToken');
-    delete axios.defaults.headers.common.Authorization;
-  }
-};
-
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INITIALISE': {
@@ -56,12 +46,12 @@ const reducer = (state, action) => {
       };
     }
     case 'LOGIN': {
-      const { user } = action.payload;
+      const { responseData } = action.payload;
 
       return {
         ...state,
         isAuthenticated: true,
-        user
+        user: responseData
       };
     }
     case 'LOGOUT': {
@@ -72,12 +62,12 @@ const reducer = (state, action) => {
       };
     }
     case 'REGISTER': {
-      const { user } = action.payload;
+      const { responseData } = action.payload;
 
       return {
         ...state,
         isAuthenticated: true,
-        user
+        user: responseData
       };
     }
     default: {
@@ -99,62 +89,49 @@ export const AuthProvider = ({ children }) => {
 
   const login = async data => {
     try {
-      const response = await axios.post(`${url}login/`, data, configHeader);
-      console.log(response.data);
+      const body = JSON.stringify(data);
+      const response = await axios.post(`${url}login/`, body, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const { responseData } = response.data;
+
+      dispatch({
+        type: 'LOGIN',
+        payload: { responseData }
+      });
     } catch (err) {
       console.log(err);
     }
-    // const { accessToken, user } = response.data;
-
-    // setSession(accessToken);
-    // dispatch({
-    //   type: 'LOGIN',
-    //   payload: {
-    //     user
-    //   }
-    // });
   };
 
   const logout = () => {
-    setSession(null);
     dispatch({ type: 'LOGOUT' });
   };
 
   const register = async data => {
-    data.partnerCode = '';
-    data.referenceId = '';
-    data.userRefererUrl = '';
-    data.userIpAddress = '';
-    data.userDeviceType = '';
-    data.userBrowserType = '';
-
     try {
-      const response = await axios.post(`${url}signup/`, data, configHeader);
-      console.log('pass auth reg');
-      console.log(response.data);
+      const body = JSON.stringify(data);
+      const response = await axios.post(`${url}signup/`, body, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      const { responseData } = response.data;
+      dispatch({
+        type: 'REGISTER',
+        payload: { responseData }
+      });
     } catch (err) {
       console.log(err);
     }
-    // const { accessToken, user } = response.data;
-
-    // window.localStorage.setItem('accessToken', accessToken);
-
-    // dispatch({
-    //   type: 'REGISTER',
-    //   payload: {
-    //     user
-    //   }
-    // });
   };
 
   useEffect(() => {
     const initialise = async () => {
       try {
-        const accessToken = window.localStorage.getItem('accessToken');
+        const accessToken = window.localStorage.getItem('base64Token');
 
-        if (accessToken && isValidToken(accessToken)) {
-          setSession(accessToken);
-
+        if (accessToken) {
           const response = await axios.get('/api/account/me');
           const { user } = response.data;
 

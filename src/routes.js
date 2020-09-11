@@ -68,6 +68,16 @@ const routes = [
     component: lazy(() => import('src/views/auth/RegisterView'))
   },
   {
+    exact: true,
+    path: '/forgot-password',
+    component: lazy(() => import('src/views/auth/ForgotView/ForgotPassword'))
+  },
+  {
+    exact: true,
+    path: '/forgot-pin',
+    component: lazy(() => import('src/views/auth/ForgotView/ForgotPin'))
+  },
+  {
     path: '/app',
     guard: AuthGuard,
     layout: DashboardLayout,
