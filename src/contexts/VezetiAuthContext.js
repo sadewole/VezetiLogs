@@ -11,9 +11,6 @@ const base64Token = btoa(
 if (base64Token) {
   localStorage.setItem('base64Token', base64Token);
   axios.defaults.headers.common.Authorization = `Basic ${base64Token}`;
-} else {
-  localStorage.removeItem('base64Token');
-  delete axios.defaults.headers.common.Authorization;
 }
 
 const initialAuthState = {
@@ -30,6 +27,9 @@ const setUserStorage = data => {
       orgId: data.orgId
     });
     localStorage.setItem('user', user);
+  } else {
+    localStorage.removeItem('user');
+    delete axios.defaults.headers.common.Authorization;
   }
 };
 
@@ -131,6 +131,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    setUserStorage(null);
     dispatch({ type: 'LOGOUT' });
   };
 
@@ -169,7 +170,6 @@ export const AuthProvider = ({ children }) => {
             }
           );
           const { responseData } = response.data;
-          console.log(responseData);
           dispatch({
             type: 'INITIALISE',
             payload: {
