@@ -22,6 +22,16 @@ const initialAuthState = {
   user: null
 };
 
+const setUserStorage = data => {
+  if (data) {
+    const user = JSON.stringify({
+      userId: data.userId,
+      orgId: data.orgId
+    });
+    localStorage.setItem('user', user);
+  }
+};
+
 const isValidToken = accessToken => {
   if (!accessToken) {
     return false;
@@ -36,13 +46,13 @@ const isValidToken = accessToken => {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'INITIALISE': {
-      const { isAuthenticated, user } = action.payload;
+      const { isAuthenticated, responseData } = action.payload;
 
       return {
         ...state,
         isAuthenticated,
         isInitialised: true,
-        user
+        user: responseData
       };
     }
     case 'LOGIN': {
@@ -95,11 +105,12 @@ export const AuthProvider = ({ children }) => {
       });
 
       const { responseData } = response.data;
-
-      dispatch({
-        type: 'LOGIN',
-        payload: { responseData }
-      });
+      console.log(responseData);
+      setUserStorage(responseData);
+      // dispatch({
+      //   type: 'LOGIN',
+      //   payload: { responseData }
+      // });
     } catch (err) {
       console.log(err);
     }
@@ -117,6 +128,8 @@ export const AuthProvider = ({ children }) => {
       });
 
       const { responseData } = response.data;
+      setUserStorage(responseData);
+
       dispatch({
         type: 'REGISTER',
         payload: { responseData }
@@ -129,17 +142,25 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initialise = async () => {
       try {
-        const accessToken = window.localStorage.getItem('base64Token');
+        const user = window.localStorage.getItem('user');
 
-        if (accessToken) {
-          const response = await axios.get('/api/account/me');
-          const { user } = response.data;
-
+        if (user) {
+          const { userId, orgId } = JSON.parse(user);
+          const body = JSON.stringify({ userId, orgId });
+          const response = await axios.post(
+            `${url}get-user-account-parameters/`,
+            body,
+            {
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+          const { responseData } = response.data;
+          console.log(responseData);
           dispatch({
             type: 'INITIALISE',
             payload: {
               isAuthenticated: true,
-              user
+              responseData
             }
           });
         } else {
@@ -147,7 +168,7 @@ export const AuthProvider = ({ children }) => {
             type: 'INITIALISE',
             payload: {
               isAuthenticated: false,
-              user: null
+              responseData: null
             }
           });
         }
@@ -157,7 +178,7 @@ export const AuthProvider = ({ children }) => {
           type: 'INITIALISE',
           payload: {
             isAuthenticated: false,
-            user: null
+            responseData: null
           }
         });
       }

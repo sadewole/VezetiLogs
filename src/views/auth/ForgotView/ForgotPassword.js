@@ -94,11 +94,13 @@ const ForgotPassword = () => {
                 <img alt="Auth method" src={methodIcons[method]} />
               </div>
             </Box>
-            <Box mt={2}>
-              <Alert severity="info">
-                <div>{message}</div>
-              </Alert>
-            </Box>
+            {message && message.length ? (
+              <Box mt={2}>
+                <Alert severity="info">
+                  <div>{message}</div>
+                </Alert>
+              </Box>
+            ) : null}
             <Box flexGrow={1} mt={3}>
               <Formik
                 initialValues={{

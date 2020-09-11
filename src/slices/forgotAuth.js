@@ -55,8 +55,6 @@ export const postForgotPassword = (orgId, email) => async dispatch => {
 
 export const postForgotPin = (orgId, mobile) => async dispatch => {
   try {
-    console.log('1',orgId)
-    console.log('2', mobile)
     const body = JSON.stringify({ orgId, mobile });
     const response = await axios.post(`${url}forgotpin/`, body, {
       headers: { 'Content-Type': 'application/json' }

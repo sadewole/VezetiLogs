@@ -142,7 +142,6 @@ const VezetiLogin = ({ className, ...rest }) => {
           <TextField
             error={Boolean(touched.orgId && errors.orgId)}
             fullWidth
-            autoFocus
             helperText={touched.orgId && errors.orgId}
             label="Organization Id"
             margin="normal"
@@ -159,7 +158,6 @@ const VezetiLogin = ({ className, ...rest }) => {
               <TextField
                 error={Boolean(touched.email && errors.email)}
                 fullWidth
-                autoFocus
                 helperText={touched.email && errors.email}
                 label="Email Address"
                 margin="normal"
