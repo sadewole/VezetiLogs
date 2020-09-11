@@ -31,6 +31,7 @@ const JWTRegister = ({ className, ...rest }) => {
         email: '',
         name: '',
         password: '',
+        passwordConfirm: '',
         policy: false,
         submit: null
       }}
@@ -46,6 +47,9 @@ const JWTRegister = ({ className, ...rest }) => {
           .min(7)
           .max(255)
           .required('Password is required'),
+        passwordConfirm: Yup.string()
+          .oneOf([Yup.ref('password'), null], 'Passwords must match')
+          .required('Required'),
         policy: Yup.boolean().oneOf([true], 'This field must be checked')
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
@@ -115,6 +119,19 @@ const JWTRegister = ({ className, ...rest }) => {
             onChange={handleChange}
             type="password"
             value={values.password}
+            variant="outlined"
+          />
+          <TextField
+            error={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
+            fullWidth
+            helperText={touched.passwordConfirm && errors.passwordConfirm}
+            label="Password Confirmation"
+            margin="normal"
+            name="passwordConfirm"
+            onBlur={handleBlur}
+            onChange={handleChange}
+            type="password"
+            value={values.passwordConfirm}
             variant="outlined"
           />
           <Box alignItems="center" display="flex" mt={2} ml={-1}>

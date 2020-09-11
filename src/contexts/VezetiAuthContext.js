@@ -19,13 +19,14 @@ if (base64Token) {
 const initialAuthState = {
   isAuthenticated: false,
   isInitialised: false,
-  user: null
+  user: null,
+  message: ''
 };
 
 const setUserStorage = data => {
   if (data) {
     const user = JSON.stringify({
-      userId: data.userId,
+      userId: data.userGlobalId,
       orgId: data.orgId
     });
     localStorage.setItem('user', user);
@@ -80,6 +81,15 @@ const reducer = (state, action) => {
         user: responseData
       };
     }
+    case 'MESSAGE': {
+      const { responseMessage } = action.payload;
+
+      return {
+        ...state,
+        isAuthenticated: false,
+        message: responseMessage
+      };
+    }
     default: {
       return { ...state };
     }
@@ -103,14 +113,18 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(`${url}login/`, body, {
         headers: { 'Content-Type': 'application/json' }
       });
-
-      const { responseData } = response.data;
-      console.log(responseData);
+      const { responseData, responseMessage } = response.data;
+      if (!responseData) {
+        return dispatch({
+          type: 'MESSAGE',
+          payload: { responseMessage }
+        });
+      }
       setUserStorage(responseData);
-      // dispatch({
-      //   type: 'LOGIN',
-      //   payload: { responseData }
-      // });
+      dispatch({
+        type: 'LOGIN',
+        payload: { responseData }
+      });
     } catch (err) {
       console.log(err);
     }

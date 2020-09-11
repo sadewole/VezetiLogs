@@ -16,7 +16,8 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
-import wait from 'src/utils/wait';
+import { useDispatch, useSelector } from 'src/store';
+import { changeEmail } from 'src/slices/forgotAuth';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -25,36 +26,37 @@ const useStyles = makeStyles(() => ({
 const Security = ({ className, ...rest }) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { message } = useSelector(state => state.forgotAuth);
+  const dispatch = useDispatch();
 
   return (
     <Formik
       initialValues={{
-        password: '',
-        passwordConfirm: '',
+        currentEmail: '',
+        newEmail: '',
         submit: null
       }}
       validationSchema={Yup.object().shape({
-        password: Yup.string()
-          .min(7, 'Must be at least 7 characters')
+        currentEmail: Yup.string()
+          .email('Must be a valid email')
           .max(255)
-          .required('Required'),
-        passwordConfirm: Yup.string()
-          .oneOf([Yup.ref('password'), null], 'Passwords must match')
-          .required('Required')
+          .required('Email is required'),
+        newEmail: Yup.string()
+          .email('Must be a valid email')
+          .max(255)
+          .required('Email is required')
       })}
-      onSubmit={async (values, {
-        resetForm,
-        setErrors,
-        setStatus,
-        setSubmitting
-      }) => {
+      onSubmit={async (
+        values,
+        { resetForm, setErrors, setStatus, setSubmitting }
+      ) => {
         try {
           // NOTE: Make API request
-          await wait(500);
+          await dispatch(changeEmail(values.currentEmail, values.newEmail));
           resetForm();
           setStatus({ success: true });
           setSubmitting(false);
-          enqueueSnackbar('Password updated', {
+          enqueueSnackbar(message, {
             variant: 'success'
           });
         } catch (err) {
@@ -75,77 +77,55 @@ const Security = ({ className, ...rest }) => {
         values
       }) => (
         <form onSubmit={handleSubmit}>
-          <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-          >
-            <CardHeader title="Change Password" />
+          <Card className={clsx(classes.root, className)} {...rest}>
+            <CardHeader title="Change Email" />
             <Divider />
             <CardContent>
-              <Grid
-                container
-                spacing={3}
-              >
-                <Grid
-                  item
-                  md={4}
-                  sm={6}
-                  xs={12}
-                >
+              <Grid container spacing={3}>
+                <Grid item md={4} sm={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.password && errors.password)}
+                    error={Boolean(touched.currentEmail && errors.currentEmail)}
                     fullWidth
-                    helperText={touched.password && errors.password}
-                    label="Password"
-                    name="password"
+                    helperText={touched.currentEmail && errors.currentEmail}
+                    label="Current Email"
+                    name="currentEmail"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="password"
-                    value={values.password}
+                    type="email"
+                    value={values.currentEmail}
                     variant="outlined"
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={4}
-                  sm={6}
-                  xs={12}
-                >
+                <Grid item md={4} sm={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
+                    error={Boolean(touched.newEmail && errors.newEmail)}
                     fullWidth
-                    helperText={touched.passwordConfirm && errors.passwordConfirm}
-                    label="Password Confirmation"
-                    name="passwordConfirm"
+                    helperText={touched.newEmail && errors.newEmail}
+                    label="New Email"
+                    name="newEmail"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="password"
-                    value={values.passwordConfirm}
+                    type="email"
+                    value={values.newEmail}
                     variant="outlined"
                   />
                 </Grid>
               </Grid>
               {errors.submit && (
                 <Box mt={3}>
-                  <FormHelperText error>
-                    {errors.submit}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
                 </Box>
               )}
             </CardContent>
             <Divider />
-            <Box
-              p={2}
-              display="flex"
-              justifyContent="flex-end"
-            >
+            <Box p={2} display="flex" justifyContent="flex-end">
               <Button
                 color="secondary"
                 disabled={isSubmitting}
                 type="submit"
                 variant="contained"
               >
-                Change Password
+                Change Email
               </Button>
             </Box>
           </Card>

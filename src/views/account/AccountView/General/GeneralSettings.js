@@ -37,10 +37,11 @@ const GeneralSettings = ({ className, user, ...rest }) => {
         canHire: user.canHire || false,
         city: user.city || '',
         country: user.country || '',
-        email: user.email || '',
+        email: user.userEmail || '',
         isPublic: user.isPublic || false,
-        name: user.name || '',
-        phone: user.phone || '',
+        firstName: user.userFirstName || '',
+        lastName: user.userLastName || '',
+        phone: user.userPhoneNumber || '',
         state: user.state || '',
         submit: null
       }}
@@ -48,18 +49,24 @@ const GeneralSettings = ({ className, user, ...rest }) => {
         canHire: Yup.bool(),
         city: Yup.string().max(255),
         country: Yup.string().max(255),
-        email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+        email: Yup.string()
+          .email('Must be a valid email')
+          .max(255)
+          .required('Email is required'),
         isPublic: Yup.bool(),
-        name: Yup.string().max(255).required('Name is required'),
+        firstName: Yup.string()
+          .max(255)
+          .required('Firstname is required'),
+        lastName: Yup.string()
+          .max(255)
+          .required('Lastname is required'),
         phone: Yup.string(),
         state: Yup.string()
       })}
-      onSubmit={async (values, {
-        resetForm,
-        setErrors,
-        setStatus,
-        setSubmitting
-      }) => {
+      onSubmit={async (
+        values,
+        { resetForm, setErrors, setStatus, setSubmitting }
+      ) => {
         try {
           // NOTE: Make API request
           await wait(200);
@@ -87,58 +94,38 @@ const GeneralSettings = ({ className, user, ...rest }) => {
         values
       }) => (
         <form onSubmit={handleSubmit}>
-          <Card
-            className={clsx(classes.root, className)}
-            {...rest}
-          >
+          <Card className={clsx(classes.root, className)} {...rest}>
             <CardHeader title="Profile" />
             <Divider />
             <CardContent>
-              <Grid
-                container
-                spacing={4}
-              >
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
+              <Grid container spacing={4}>
+                <Grid item md={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.name && errors.name)}
+                    error={Boolean(touched.firstName && errors.firstName)}
                     fullWidth
-                    helperText={touched.name && errors.name}
-                    label="Name"
-                    name="name"
+                    helperText={touched.firstName && errors.firstName}
+                    label="First Name"
+                    name="firstName"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    value={values.name}
+                    value={values.firstName}
                     variant="outlined"
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
+                <Grid item md={6} xs={12}>
                   <TextField
-                    error={Boolean(touched.email && errors.email)}
+                    error={Boolean(touched.lastName && errors.lastName)}
                     fullWidth
-                    helperText={touched.email && errors.email ? errors.email : 'We will use this email to contact you'}
-                    label="Email Address"
-                    name="email"
+                    helperText={touched.lastName && errors.lastName}
+                    label="Last Name"
+                    name="lastName"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    required
-                    type="email"
-                    value={values.email}
+                    value={values.lastName}
                     variant="outlined"
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
+                <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.phone && errors.phone)}
                     fullWidth
@@ -151,15 +138,30 @@ const GeneralSettings = ({ className, user, ...rest }) => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    error={Boolean(touched.email && errors.email)}
+                    fullWidth
+                    helperText={
+                      touched.email && errors.email
+                        ? errors.email
+                        : 'We will use this email to contact you'
+                    }
+                    label="Email Address"
+                    name="email"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    required
+                    type="email"
+                    value={values.email}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
                   <Autocomplete
-                    getOptionLabel={(option) => option.text}
+                    getOptionLabel={option => option.text}
                     options={countries}
-                    renderInput={(params) => (
+                    renderInput={params => (
                       <TextField
                         fullWidth
                         label="Country"
@@ -171,11 +173,7 @@ const GeneralSettings = ({ className, user, ...rest }) => {
                     )}
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
+                <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.state && errors.state)}
                     fullWidth
@@ -188,11 +186,7 @@ const GeneralSettings = ({ className, user, ...rest }) => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
+                <Grid item md={6} xs={12}>
                   <TextField
                     error={Boolean(touched.city && errors.city)}
                     fullWidth
@@ -205,23 +199,13 @@ const GeneralSettings = ({ className, user, ...rest }) => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
-                  <Typography
-                    variant="h6"
-                    color="textPrimary"
-                  >
+                <Grid item md={6} xs={12}>
+                  <Typography variant="h6" color="textPrimary">
                     Make Contact Info Public
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                  >
-                    Means that anyone viewing your profile will be able to see your
-                    contacts details
+                  <Typography variant="body2" color="textSecondary">
+                    Means that anyone viewing your profile will be able to see
+                    your contacts details
                   </Typography>
                   <Switch
                     checked={values.isPublic}
@@ -230,23 +214,13 @@ const GeneralSettings = ({ className, user, ...rest }) => {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                >
-                  <Typography
-                    variant="h6"
-                    color="textPrimary"
-                  >
+                <Grid item md={6} xs={12}>
+                  <Typography variant="h6" color="textPrimary">
                     Available to hire
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                  >
-                    Toggling this will let your teammates know that you are available
-                    for acquiring new projects
+                  <Typography variant="body2" color="textSecondary">
+                    Toggling this will let your teammates know that you are
+                    available for acquiring new projects
                   </Typography>
                   <Switch
                     checked={values.canHire}
@@ -258,18 +232,12 @@ const GeneralSettings = ({ className, user, ...rest }) => {
               </Grid>
               {errors.submit && (
                 <Box mt={3}>
-                  <FormHelperText error>
-                    {errors.submit}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
                 </Box>
               )}
             </CardContent>
             <Divider />
-            <Box
-              p={2}
-              display="flex"
-              justifyContent="flex-end"
-            >
+            <Box p={2} display="flex" justifyContent="flex-end">
               <Button
                 color="secondary"
                 disabled={isSubmitting}

@@ -31,6 +31,9 @@ const slice = createSlice({
       const { responseMessage } = action.payload;
 
       state.message = responseMessage;
+    },
+    clearMessage(state) {
+      state.message = '';
     }
   }
 });
@@ -48,9 +51,14 @@ export const postForgotPassword = (orgId, email) => async dispatch => {
     });
 
     dispatch(slice.actions.postForgotPassword(response.data));
+    setTimeout(() => dispatch(slice.actions.clearMessage()), 3000);
   } catch (err) {
     console.log(err);
   }
+};
+
+export const clearMessage = () => dispatch => {
+  dispatch(slice.actions.clearMessage());
 };
 
 export const postForgotPin = (orgId, mobile) => async dispatch => {
@@ -61,6 +69,23 @@ export const postForgotPin = (orgId, mobile) => async dispatch => {
     });
 
     dispatch(slice.actions.postForgotPin(response.data));
+    setTimeout(() => dispatch(slice.actions.clearMessage()), 3000);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const changeEmail = (currentEmail, newEmail) => async dispatch => {
+  try {
+    const user = window.localStorage.getItem('user');
+    const { userId, orgId } = JSON.parse(user);
+    const body = JSON.stringify({ currentEmail, newEmail, userId, orgId });
+    await axios.post(`${url}change-user-email/`, body, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    dispatch(slice.actions.changeEmail('Email changes successfully'));
+    setTimeout(() => dispatch(slice.actions.clearMessage()), 3000);
   } catch (err) {
     console.log(err);
   }
