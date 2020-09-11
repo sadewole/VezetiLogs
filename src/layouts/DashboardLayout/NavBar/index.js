@@ -403,7 +403,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               <Avatar
                 alt="User"
                 className={classes.avatar}
-                src={user.avatar}
+                src={'/static/images/avatars/avatar_4.png'}
               />
             </RouterLink>
           </Box>
