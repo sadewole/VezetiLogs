@@ -57,11 +57,12 @@ const reducer = (state, action) => {
       };
     }
     case 'LOGIN': {
-      const { responseData } = action.payload;
+      const { responseData, message } = action.payload;
 
       return {
         ...state,
         isAuthenticated: true,
+        message,
         user: responseData
       };
     }
@@ -90,6 +91,12 @@ const reducer = (state, action) => {
         message: responseMessage
       };
     }
+    case 'CLEAR_MESSAGE': {
+      return {
+        ...state,
+        message: ''
+      };
+    }
     default: {
       return { ...state };
     }
@@ -101,7 +108,8 @@ const AuthContext = createContext({
   method: 'JWT',
   login: () => Promise.resolve(),
   logout: () => {},
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  clearMessage: () => {}
 });
 
 export const AuthProvider = ({ children }) => {
@@ -123,7 +131,7 @@ export const AuthProvider = ({ children }) => {
       setUserStorage(responseData);
       dispatch({
         type: 'LOGIN',
-        payload: { responseData }
+        payload: { responseData, message: `User login successful via ${data.email || data.mobile}` }
       });
     } catch (err) {
       console.log(err);
@@ -142,7 +150,14 @@ export const AuthProvider = ({ children }) => {
         headers: { 'Content-Type': 'application/json' }
       });
 
-      const { responseData } = response.data;
+      const { responseData, responseMessage } = response.data;
+
+      if (!responseData) {
+        return dispatch({
+          type: 'MESSAGE',
+          payload: { responseMessage }
+        });
+      }
       setUserStorage(responseData);
 
       dispatch({
@@ -152,6 +167,12 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const clearMessage = () => {
+    dispatch({
+      type: 'CLEAR_MESSAGE'
+    });
   };
 
   useEffect(() => {
@@ -212,7 +233,8 @@ export const AuthProvider = ({ children }) => {
         method: 'JWT',
         login,
         logout,
-        register
+        register,
+        clearMessage
       }}
     >
       {children}

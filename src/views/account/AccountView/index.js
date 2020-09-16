@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -7,14 +7,16 @@ import {
   Tabs,
   makeStyles
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import Page from 'src/components/Page';
 import Header from './Header';
 import General from './General';
 import Subscription from './Subscription';
 import Notifications from './Notifications';
 import Security from './Security';
+import useAuth from 'src/hooks/useAuth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
@@ -24,7 +26,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AccountView = () => {
+  const { message } = useAuth();
+  console.log(message);
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState('general');
 
   const tabs = [
@@ -34,15 +39,20 @@ const AccountView = () => {
     { value: 'security', label: 'Security' }
   ];
 
+  useEffect(() => {
+    if (message !== '') {
+      enqueueSnackbar(message, {
+        variant: 'success'
+      });
+    }
+  }, []);
+
   const handleTabsChange = (event, value) => {
     setCurrentTab(value);
   };
 
   return (
-    <Page
-      className={classes.root}
-      title="Settings"
-    >
+    <Page className={classes.root} title="Settings">
       <Container maxWidth="lg">
         <Header />
         <Box mt={3}>
@@ -53,12 +63,8 @@ const AccountView = () => {
             variant="scrollable"
             textColor="secondary"
           >
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.value}
-                label={tab.label}
-                value={tab.value}
-              />
+            {tabs.map(tab => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
             ))}
           </Tabs>
         </Box>

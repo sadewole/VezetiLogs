@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import clsx from 'clsx';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -24,14 +24,20 @@ const useStyles = makeStyles(() => ({
 
 const VezetiLogin = ({ className, ...rest }) => {
   const classes = useStyles();
-  const { login, message } = useAuth();
+  const { login, message, clearMessage } = useAuth();
   const isMountedRef = useIsMountedRef();
+
+  useEffect(() => {
+    return () => {
+      clearMessage();
+    };
+  }, []);
 
   return (
     <Fragment>
       {message && message.length ? (
-        <Box mt={2}>
-          <Alert severity="info">
+        <Box my={2}>
+          <Alert severity="error">
             <div>{message}</div>
           </Alert>
         </Box>
