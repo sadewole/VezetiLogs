@@ -26,8 +26,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AccountView = () => {
-  const { message } = useAuth();
-  console.log(message);
+  const { messagePop } = useAuth();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const [currentTab, setCurrentTab] = useState('general');
@@ -40,8 +39,8 @@ const AccountView = () => {
   ];
 
   useEffect(() => {
-    if (message !== '') {
-      enqueueSnackbar(message, {
+    if (messagePop !== '') {
+      enqueueSnackbar(messagePop, {
         variant: 'success'
       });
     }

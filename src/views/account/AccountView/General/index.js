@@ -38,8 +38,7 @@ const useStyles = makeStyles(theme => ({
 
 const General = ({ className, ...rest }) => {
   const classes = useStyles();
-  const { user, message } = useAuth();
-  console.log(message);
+  const { user } = useAuth();
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardHeader title="Profile" />
@@ -66,7 +65,7 @@ const General = ({ className, ...rest }) => {
                 className={classes.name}
                 color="textPrimary"
                 gutterBottom
-                variant="body1"
+                variant="h3"
               >
                 {user.userFirstName} {user.userLastName}
               </Typography>
@@ -84,7 +83,9 @@ const General = ({ className, ...rest }) => {
                       <Typography variant="body2" color="textSecondary">
                         {user.email}
                       </Typography>
-                      <Label color="success">Email verified</Label>
+                      {user.email ? (
+                        <Label color="success">Email verified</Label>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -133,17 +134,7 @@ const General = ({ className, ...rest }) => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="textSecondary">
-                        {user.userAccountBalance}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className={classes.fontWeightMedium}>
-                      Currency
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="body2" color="textSecondary">
-                        {user.currency3Letters}
+                        {user.currency3Letters} {user.userAccountBalance}
                       </Typography>
                     </TableCell>
                   </TableRow>

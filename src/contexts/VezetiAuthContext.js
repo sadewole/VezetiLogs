@@ -17,7 +17,8 @@ const initialAuthState = {
   isAuthenticated: false,
   isInitialised: false,
   user: null,
-  message: ''
+  message: '',
+  messagePop: ''
 };
 
 const setUserStorage = data => {
@@ -58,11 +59,10 @@ const reducer = (state, action) => {
     }
     case 'LOGIN': {
       const { responseData, message } = action.payload;
-
       return {
         ...state,
         isAuthenticated: true,
-        message,
+        messagePop: message,
         user: responseData
       };
     }
@@ -131,7 +131,12 @@ export const AuthProvider = ({ children }) => {
       setUserStorage(responseData);
       dispatch({
         type: 'LOGIN',
-        payload: { responseData, message: `User login successful via ${data.email || data.mobile}` }
+        payload: {
+          responseData,
+          message: `User login successful via ${
+            data.email ? 'email' : 'mobile number'
+          }`
+        }
       });
     } catch (err) {
       console.log(err);
