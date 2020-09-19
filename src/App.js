@@ -16,6 +16,7 @@ import { AuthProvider } from 'src/contexts/VezetiAuthContext';
 import useSettings from 'src/hooks/useSettings';
 import { createTheme } from 'src/theme';
 import routes, { renderRoutes } from 'src/routes';
+import NetworkDetector from 'src/components/NetworkDetector';
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 const history = createBrowserHistory();
@@ -35,14 +36,16 @@ const App = () => {
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <SnackbarProvider dense maxSnack={3}>
             <Router history={history}>
-              <AuthProvider>
-                <GlobalStyles />
-                <ScrollReset />
-                <GoogleAnalytics />
-                <CookiesNotification />
-                <SettingsNotification />
-                {renderRoutes(routes)}
-              </AuthProvider>
+              <NetworkDetector>
+                <AuthProvider>
+                  <GlobalStyles />
+                  <ScrollReset />
+                  <GoogleAnalytics />
+                  <CookiesNotification />
+                  <SettingsNotification />
+                  {renderRoutes(routes)}
+                </AuthProvider>
+              </NetworkDetector>
             </Router>
           </SnackbarProvider>
         </MuiPickersUtilsProvider>
