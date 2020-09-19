@@ -13,10 +13,10 @@ import {
   Link,
   makeStyles
 } from '@material-ui/core';
-import { APP_VERSION } from 'src/constants';
 import Logo from 'src/components/Logo';
+import useAuth from 'src/hooks/useAuth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.default
   },
@@ -41,39 +41,29 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TopBar = ({ className, ...rest }) => {
+  const { isAuthenticated } = useAuth();
   const classes = useStyles();
 
   return (
-    <AppBar
-      className={clsx(classes.root, className)}
-      color="default"
-      {...rest}
-    >
+    <AppBar className={clsx(classes.root, className)} color="default" {...rest}>
       <Toolbar className={classes.toolbar}>
         <RouterLink to="/">
           <Logo className={classes.logo} />
         </RouterLink>
-        <Hidden mdDown>
-          <Typography
-            variant="caption"
-            color="textSecondary"
-          >
-            Version
-            {' '}
-            {APP_VERSION}
-          </Typography>
-        </Hidden>
         <Box flexGrow={1} />
-        <Link
-          className={classes.link}
-          color="textSecondary"
-          component={RouterLink}
-          to="/app"
-          underline="none"
-          variant="body2"
-        >
-          Dashboard
-        </Link>
+        {isAuthenticated && (
+          <Link
+            className={classes.link}
+            color="textSecondary"
+            component={RouterLink}
+            to="/app"
+            underline="none"
+            variant="body2"
+          >
+            Dashboard
+          </Link>
+        )}
+
         <Link
           className={classes.link}
           color="textSecondary"
@@ -84,16 +74,50 @@ const TopBar = ({ className, ...rest }) => {
         >
           Documentation
         </Link>
-        <Divider className={classes.divider} />
-        <Button
-          color="secondary"
-          component="a"
-          href="https://material-ui.com/store/items/devias-kit-pro"
-          variant="contained"
-          size="small"
+        <Link
+          className={classes.link}
+          color="textSecondary"
+          component={RouterLink}
+          to="#"
+          underline="none"
+          variant="body2"
         >
-          Get the kit
-        </Button>
+          Product
+        </Link>
+        <Link
+          className={classes.link}
+          color="textSecondary"
+          component={RouterLink}
+          to="#"
+          underline="none"
+          variant="body2"
+        >
+          Pricing
+        </Link>
+        <Link
+          className={classes.link}
+          color="textSecondary"
+          component={RouterLink}
+          to="/"
+          underline="none"
+          variant="body2"
+        >
+          Support
+        </Link>
+        {!isAuthenticated && (
+          <>
+            <Divider className={classes.divider} />
+            <Button
+              color="secondary"
+              component={RouterLink}
+              to="/login"
+              variant="contained"
+              size="small"
+            >
+              Login
+            </Button>
+          </>
+        )}
       </Toolbar>
     </AppBar>
   );

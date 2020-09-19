@@ -5,7 +5,7 @@ const Logo = props => {
     <img
       alt="Logo"
       src="/static/logo.png"
-      style={{ width: '40px', height: '40px' }}
+      style={{ width: '40px', height: '50px' }}
       {...props}
     />
   );

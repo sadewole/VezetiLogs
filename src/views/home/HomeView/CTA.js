@@ -35,16 +35,15 @@ const CTA = ({ className, ...rest }) => {
           Setup Your Vezeti Business Number In Less Than 10 Minutes
         </Typography>
         <Box mt={6} display="flex" justifyContent="center" alignItems="center">
-          <RouterLink to="/register">
-            <Button
-              color="secondary"
-              component="a"
-              href="https://material-ui.com/store/items/devias-kit-pro"
-              variant="contained"
-            >
-              Sign Up
-            </Button>
-          </RouterLink>
+          <Button
+            color="secondary"
+            component={RouterLink}
+            to="/register"
+            underline="none"
+            variant="contained"
+          >
+            Sign Up
+          </Button>
         </Box>
       </Container>
     </div>
