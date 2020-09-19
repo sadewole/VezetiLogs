@@ -12,6 +12,7 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
+import { ArrowDropDown, ArrowDropUp } from '@material-ui/icons';
 import useAuth from 'src/hooks/useAuth';
 
 const useStyles = makeStyles(theme => ({
@@ -45,7 +46,7 @@ const Account = () => {
     try {
       handleClose();
       await logout();
-      history.push('/');
+      history.push('/login');
     } catch (err) {
       console.error(err);
       enqueueSnackbar('Unable to logout', {
@@ -73,6 +74,7 @@ const Account = () => {
             {user.userFirstName}
           </Typography>
         </Hidden>
+        {!isOpen ? <ArrowDropDown /> : <ArrowDropUp />}
       </Box>
       <Menu
         onClose={handleClose}

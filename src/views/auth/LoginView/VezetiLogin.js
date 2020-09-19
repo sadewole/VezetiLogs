@@ -26,14 +26,8 @@ const VezetiLogin = ({ className, ...rest }) => {
   const loginOption = ['email', 'mobile'];
   const [loginType, setLoginType] = useState(loginOption[0]);
   const classes = useStyles();
-  const { login, message, clearMessage } = useAuth();
+  const { login, message } = useAuth();
   const isMountedRef = useIsMountedRef();
-
-  useEffect(() => {
-    return () => {
-      clearMessage();
-    };
-  }, []);
 
   return (
     <Fragment>
@@ -60,7 +54,7 @@ const VezetiLogin = ({ className, ...rest }) => {
             errors.orgId = 'Organization Id is required';
           }
 
-          if (values.loginType === 'email') {
+          if (loginType === 'email') {
             if (!values.email) {
               errors.email = 'Email is required';
             } else if (!/^\S+@\S+$/.test(values.email)) {

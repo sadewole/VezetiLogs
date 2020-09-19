@@ -4,6 +4,7 @@ import {
   Box,
   Card,
   CardContent,
+  CardActions,
   Chip,
   Container,
   Divider,
@@ -16,6 +17,7 @@ import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import useAuth from 'src/hooks/useAuth';
 import Auth0Login from './Auth0Login';
+import { ArrowBack } from '@material-ui/icons';
 import FirebaseAuthLogin from './FirebaseAuthLogin';
 // import JWTLogin from './JWTLogin';
 import VezetiLogin from './VezetiLogin';
@@ -31,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.dark,
     display: 'flex',
     flexDirection: 'column',
+    paddingTop: 10,
     minHeight: '100vh'
   },
   banner: {
@@ -63,6 +66,10 @@ const useStyles = makeStyles(theme => ({
       width: 'auto',
       maxHeight: '100%'
     }
+  },
+  icon: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
@@ -72,54 +79,7 @@ const LoginView = () => {
 
   return (
     <Page className={classes.root} title="Login">
-      {/* <div className={classes.banner}>
-        <Container maxWidth="md">
-          <Box alignItems="center" display="flex" justifyContent="center">
-            <Chip
-              color="secondary"
-              label="NEW"
-              size="small"
-              className={classes.bannerChip}
-            />
-            <Box alignItems="center" display="flex">
-              <Typography color="textPrimary" variant="h6">
-                Visit our{' '}
-                <Link component={RouterLink} to="/docs">
-                  docs
-                </Link>{' '}
-                and find out how to switch between
-              </Typography>
-              <Tooltip title="Auth0">
-                <img
-                  alt="Auth0"
-                  className={classes.methodIcon}
-                  src={methodIcons['Auth0']}
-                />
-              </Tooltip>
-              <Tooltip title="Firebase">
-                <img
-                  alt="Firebase"
-                  className={classes.methodIcon}
-                  src={methodIcons['FirebaseAuth']}
-                />
-              </Tooltip>
-              <Tooltip title="JSON Web Token">
-                <img
-                  alt="JWT"
-                  className={classes.methodIcon}
-                  src={methodIcons['JWT']}
-                />
-              </Tooltip>
-            </Box>
-          </Box>
-        </Container>
-  </div> */}
       <Container className={classes.cardContainer} maxWidth="sm">
-        {/* <Box mb={5} display="flex" justifyContent="center">
-          <RouterLink to="/">
-            <Logo />
-          </RouterLink>
-</Box> */}
         <Card>
           <CardContent className={classes.cardContent}>
             <Box
@@ -140,7 +100,6 @@ const LoginView = () => {
                 <RouterLink to="/">
                   <Logo />
                 </RouterLink>
-                {/*  <img alt="Auth method" src={methodIcons[method]} /> */}
               </div>
             </Box>
             <Box flexGrow={1} mt={3}>
@@ -160,6 +119,17 @@ const LoginView = () => {
               Create new account
             </Link>
           </CardContent>
+          <CardActions>
+            <Link
+              component={RouterLink}
+              to="/"
+              variant="body2"
+              color="textSecondary"
+              className={classes.icon}
+            >
+              <ArrowBack /> Return home
+            </Link>
+          </CardActions>
         </Card>
       </Container>
     </Page>

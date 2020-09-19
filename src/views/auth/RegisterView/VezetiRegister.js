@@ -23,14 +23,8 @@ const useStyles = makeStyles(() => ({
 
 const VezetiRegister = ({ className, ...rest }) => {
   const classes = useStyles();
-  const { register, message, clearMessage } = useAuth();
+  const { register, message } = useAuth();
   const isMountedRef = useIsMountedRef();
-
-  useEffect(() => {
-    return () => {
-      clearMessage();
-    };
-  }, []);
 
   return (
     <Fragment>
@@ -160,7 +154,7 @@ const VezetiRegister = ({ className, ...rest }) => {
               error={Boolean(touched.orgId && errors.orgId)}
               fullWidth
               helperText={touched.orgId && errors.orgId}
-              label="Organiztion Id"
+              label="Organization Id"
               margin="normal"
               name="orgId"
               onBlur={handleBlur}

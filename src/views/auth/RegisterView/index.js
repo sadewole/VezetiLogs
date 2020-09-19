@@ -4,7 +4,7 @@ import {
   Box,
   Card,
   CardContent,
-  Chip,
+  CardActions,
   Container,
   Divider,
   Link,
@@ -12,6 +12,7 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
+import { ArrowBack } from '@material-ui/icons';
 import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import useAuth from 'src/hooks/useAuth';
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.dark,
     display: 'flex',
     flexDirection: 'column',
-    'marginTop': 10,
+    paddingTop: 10,
     minHeight: '100vh'
   },
   banner: {
@@ -64,6 +65,10 @@ const useStyles = makeStyles(theme => ({
       width: 'auto',
       maxHeight: '100%'
     }
+  },
+  icon: {
+    display: 'flex',
+    alignItems: 'center'
   }
 }));
 
@@ -113,6 +118,17 @@ const RegisterView = () => {
               Having an account
             </Link>
           </CardContent>
+          <CardActions>
+            <Link
+              component={RouterLink}
+              to="/"
+              variant="body2"
+              color="textSecondary"
+              className={classes.icon}
+            >
+              <ArrowBack /> Return home
+            </Link>
+          </CardActions>
         </Card>
       </Container>
     </Page>

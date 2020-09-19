@@ -16,8 +16,7 @@ const initialAuthState = {
   isAuthenticated: false,
   isInitialised: false,
   user: null,
-  message: '',
-  messagePop: ''
+  message: ''
 };
 
 const setUserStorage = data => {
@@ -60,7 +59,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         isAuthenticated: true,
-        messagePop: message,
+        message,
         user: responseData
       };
     }
@@ -72,12 +71,13 @@ const reducer = (state, action) => {
       };
     }
     case 'REGISTER': {
-      const { responseData } = action.payload;
+      const { responseData, message } = action.payload;
 
       return {
         ...state,
         isAuthenticated: true,
-        user: responseData
+        user: responseData,
+        message
       };
     }
     case 'MESSAGE': {
@@ -121,10 +121,12 @@ export const AuthProvider = ({ children }) => {
       });
       const { responseData, responseMessage } = response.data;
       if (!responseData) {
-        return dispatch({
+        dispatch({
           type: 'MESSAGE',
           payload: { responseMessage }
         });
+        setTimeout(clearMessage, 5000);
+        return;
       }
       setUserStorage(responseData);
       dispatch({
@@ -136,6 +138,7 @@ export const AuthProvider = ({ children }) => {
           }`
         }
       });
+      setTimeout(clearMessage, 5000);
     } catch (err) {
       console.log(err);
     }
@@ -156,17 +159,23 @@ export const AuthProvider = ({ children }) => {
       const { responseData, responseMessage } = response.data;
 
       if (!responseData) {
-        return dispatch({
+        dispatch({
           type: 'MESSAGE',
           payload: { responseMessage }
         });
+        setTimeout(clearMessage, 5000);
+        return;
       }
       setUserStorage(responseData);
 
       dispatch({
         type: 'REGISTER',
-        payload: { responseData }
+        payload: {
+          responseData,
+          message: 'User registered successfully '
+        }
       });
+      setTimeout(clearMessage, 5000);
     } catch (err) {
       console.log(err);
     }
