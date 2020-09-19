@@ -72,7 +72,7 @@ const LoginView = () => {
 
   return (
     <Page className={classes.root} title="Login">
-      <div className={classes.banner}>
+      {/* <div className={classes.banner}>
         <Container maxWidth="md">
           <Box alignItems="center" display="flex" justifyContent="center">
             <Chip
@@ -113,13 +113,13 @@ const LoginView = () => {
             </Box>
           </Box>
         </Container>
-      </div>
+  </div> */}
       <Container className={classes.cardContainer} maxWidth="sm">
-        <Box mb={8} display="flex" justifyContent="center">
+        {/* <Box mb={5} display="flex" justifyContent="center">
           <RouterLink to="/">
             <Logo />
           </RouterLink>
-        </Box>
+</Box> */}
         <Card>
           <CardContent className={classes.cardContent}>
             <Box
@@ -137,7 +137,10 @@ const LoginView = () => {
                 </Typography>
               </div>
               <div className={classes.currentMethodIcon}>
-                <img alt="Auth method" src={methodIcons[method]} />
+                <RouterLink to="/">
+                  <Logo />
+                </RouterLink>
+                {/*  <img alt="Auth method" src={methodIcons[method]} /> */}
               </div>
             </Box>
             <Box flexGrow={1} mt={3}>

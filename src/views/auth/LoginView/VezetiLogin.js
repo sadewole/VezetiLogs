@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -14,7 +14,7 @@ import {
   InputLabel,
   Select
 } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert, Autocomplete } from '@material-ui/lab';
 import useAuth from 'src/hooks/useAuth';
 import useIsMountedRef from 'src/hooks/useIsMountedRef';
 
@@ -23,6 +23,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const VezetiLogin = ({ className, ...rest }) => {
+  const loginOption = ['email', 'mobile'];
+  const [loginType, setLoginType] = useState(loginOption[0]);
   const classes = useStyles();
   const { login, message, clearMessage } = useAuth();
   const isMountedRef = useIsMountedRef();
@@ -44,7 +46,6 @@ const VezetiLogin = ({ className, ...rest }) => {
       ) : null}
       <Formik
         initialValues={{
-          loginType: 'email',
           orgId: '',
           email: '',
           password: '',
@@ -93,7 +94,7 @@ const VezetiLogin = ({ className, ...rest }) => {
           try {
             let data;
 
-            if (values.loginType === 'email') {
+            if (loginType === 'email') {
               data = {
                 typeEmailOrPhone: 'email',
                 orgId: values.orgId,
@@ -139,20 +140,24 @@ const VezetiLogin = ({ className, ...rest }) => {
             className={clsx(classes.root, className)}
             {...rest}
           >
-            <InputLabel id="label" mb={2}>
-              Login Type
-            </InputLabel>
-            <Select
-              labelId="label"
-              fullWidth
-              name="loginType"
-              value={values.loginType}
-              onChange={handleChange}
-              variant="outlined"
-            >
-              <MenuItem value="email">Email</MenuItem>
-              <MenuItem value="mobile">Mobile</MenuItem>
-            </Select>
+            <Autocomplete
+              options={loginOption}
+              value={loginType}
+              onChange={(e, newValue) => {
+                setLoginType(newValue);
+              }}
+              disableClearable={true}
+              renderInput={params => (
+                <TextField
+                  fullWidth
+                  name="loginType"
+                  label="Login Type"
+                  margin="normal"
+                  variant="outlined"
+                  {...params}
+                />
+              )}
+            />
             <TextField
               error={Boolean(touched.orgId && errors.orgId)}
               fullWidth
@@ -167,7 +172,7 @@ const VezetiLogin = ({ className, ...rest }) => {
               variant="outlined"
             />
             {/** Change Login Type */}
-            {values.loginType === 'email' ? (
+            {loginType === 'email' ? (
               <Fragment>
                 <TextField
                   error={Boolean(touched.email && errors.email)}

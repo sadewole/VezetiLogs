@@ -9,7 +9,6 @@ const base64Token = btoa(
   `${vezetiConfig.usernameAuth}:${vezetiConfig.passwordAuth}`
 );
 if (base64Token) {
-  localStorage.setItem('base64Token', base64Token);
   axios.defaults.headers.common.Authorization = `Basic ${base64Token}`;
 }
 
@@ -30,7 +29,6 @@ const setUserStorage = data => {
     localStorage.setItem('user', user);
   } else {
     localStorage.removeItem('user');
-    delete axios.defaults.headers.common.Authorization;
   }
 };
 
