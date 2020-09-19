@@ -9,11 +9,11 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
-    paddingTop: 200,
-    paddingBottom: 200,
+    // paddingTop: 100,
+    // paddingBottom: 200,
     [theme.breakpoints.down('md')]: {
       paddingTop: 60,
       paddingBottom: 60
@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(1)
   },
   image: {
-    perspectiveOrigin: 'left center',
+    perspectiveOrigin: 'right center',
     transformStyle: 'preserve-3d',
     perspective: 1500,
     '& > img': {
-      maxWidth: '90%',
+      maxWidth: '100%',
       height: 'auto',
       transform: 'rotateY(-35deg) rotateX(15deg)',
       backfaceVisibility: 'hidden',
@@ -50,129 +50,36 @@ const Hero = ({ className, ...rest }) => {
   const classes = useStyles();
 
   return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <div className={clsx(classes.root, className)} {...rest}>
       <Container maxWidth="lg">
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            xs={12}
-            md={5}
-          >
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={5}>
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="center"
               height="100%"
             >
-              <Typography
-                variant="overline"
-                color="secondary"
-              >
-                Introducing
-              </Typography>
-              <Typography
-                variant="h1"
-                color="textPrimary"
-              >
-                Devias React Material Kit - PRO
+              <Typography variant="h1" color="textPrimary">
+                Vezeti Communications
               </Typography>
               <Box mt={3}>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                >
-                  A professional kit that comes with ready-to-use Material-UI© components
-                  developed with one common goal in mind, help you build faster &amp; beautiful
-                  applications. Each component is fully customizable,
-                  responsive and easy to integrate.
+                <Typography variant="body1" color="textSecondary">
+                  Join millions of fast developing professional multinationals
+                  businesses globally and take advantage of the benefits Vezeti
+                  offers businesses that want the professional fit at affordable
+                  rates.
                 </Typography>
-              </Box>
-              <Box mt={3}>
-                <Grid
-                  container
-                  spacing={3}
-                >
-                  <Grid item>
-                    <Typography
-                      variant="h1"
-                      color="secondary"
-                    >
-                      30+
-                    </Typography>
-                    <Typography
-                      variant="overline"
-                      color="textSecondary"
-                    >
-                      Demo Pages
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography
-                      variant="h1"
-                      color="secondary"
-                    >
-                      UX
-                    </Typography>
-                    <Typography
-                      variant="overline"
-                      color="textSecondary"
-                    >
-                      Complete Flows
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <Typography
-                      variant="h1"
-                      color="secondary"
-                    >
-                      300+
-                    </Typography>
-                    <Typography
-                      variant="overline"
-                      color="textSecondary"
-                    >
-                      Components
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Box>
-              <Box mt={3}>
-                <img
-                  alt="Javascript"
-                  className={classes.technologyIcon}
-                  src="/static/images/javascript.svg"
-                />
-                <img
-                  alt="Typescript"
-                  className={classes.technologyIcon}
-                  src="/static/images/typescript.svg"
-                />
               </Box>
             </Box>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={7}
-          >
+          <Grid item xs={12} md={7}>
             <Box position="relative">
               <div className={classes.shape}>
-                <img
-                  alt="Shapes"
-                  src="/static/home/shapes.svg"
-                />
+                <img alt="Shapes" src="/static/home/shapes.svg" />
               </div>
               <div className={classes.image}>
-                <img
-                  alt="Presentation"
-                  src="/static/home/dark-light.png"
-                />
+                <img alt="Presentation" src="/static/heroImg.jpg" />
               </div>
             </Box>
           </Grid>
