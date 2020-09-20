@@ -12,6 +12,7 @@ import ScrollReset from 'src/components/ScrollReset';
 import CookiesNotification from 'src/components/CookiesNotification';
 import GoogleAnalytics from 'src/components/GoogleAnalytics';
 import SettingsNotification from 'src/components/SettingsNotification';
+import AutoLogoutNotification from 'src/components/AutoLogoutNotification';
 import { AuthProvider } from 'src/contexts/VezetiAuthContext';
 import useSettings from 'src/hooks/useSettings';
 import { createTheme } from 'src/theme';
@@ -36,16 +37,16 @@ const App = () => {
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <SnackbarProvider dense maxSnack={3}>
             <Router history={history}>
-              <NetworkDetector>
-                <AuthProvider>
-                  <GlobalStyles />
-                  <ScrollReset />
-                  <GoogleAnalytics />
-                  <CookiesNotification />
-                  <SettingsNotification />
-                  {renderRoutes(routes)}
-                </AuthProvider>
-              </NetworkDetector>
+              <AuthProvider>
+                <GlobalStyles />
+                <ScrollReset />
+                <GoogleAnalytics />
+                <CookiesNotification />
+                <SettingsNotification />
+                <AutoLogoutNotification />
+                <NetworkDetector />
+                {renderRoutes(routes)}
+              </AuthProvider>
             </Router>
           </SnackbarProvider>
         </MuiPickersUtilsProvider>

@@ -9,12 +9,11 @@ const useStyles = makeStyles(theme => ({
   alert: {
     position: 'fixed',
     top: 0,
-    left: 'calc(100% - 65%)',
     zIndex: 1500
   }
 }));
 
-const NetworkDetector = ({ children }) => {
+const NetworkDetector = () => {
   const classes = useStyles();
   const [isDisconnected, setIsDisconnected] = useState(false);
 
@@ -37,9 +36,8 @@ const NetworkDetector = ({ children }) => {
           mode: 'no-cors'
         })
           .then(() => {
-            setIsDisconnected(false, () => {
-              return clearInterval(webPing);
-            });
+            setIsDisconnected(false);
+            return clearInterval(webPing);
           })
           .catch(() => {
             setIsDisconnected(true);
@@ -50,22 +48,16 @@ const NetworkDetector = ({ children }) => {
 
     return setIsDisconnected(true);
   };
-  return (
-    <div>
-      {isDisconnected && (
-        <div className={clsx(classes.alert)}>
-          <Alert severity="error">
-            <div>
-              <strong className="font-bold"> Network Error: </strong>
-              You're currently offline
-            </div>
-          </Alert>
+  return isDisconnected ? (
+    <div className={clsx(classes.alert)}>
+      <Alert severity="error">
+        <div>
+          <strong className="font-bold"> Network Error: </strong>
+          You're currently offline
         </div>
-      )}
-      {/* <ComposedComponent {...this.props} /> */}
-      {children}
+      </Alert>
     </div>
-  );
+  ) : null;
 };
 
 export default NetworkDetector;
