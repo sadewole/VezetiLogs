@@ -27,6 +27,7 @@ const setUserStorage = data => {
     });
     localStorage.setItem('user', user);
   } else {
+    sessionStorage.removeItem('lastTimeStamp');
     localStorage.removeItem('user');
   }
 };

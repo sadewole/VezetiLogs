@@ -32,6 +32,9 @@ const slice = createSlice({
 
       state.message = responseMessage;
     },
+    changeEmail(state, action) {
+      state.message = action.payload;
+    },
     clearMessage(state) {
       state.message = '';
     }
@@ -84,7 +87,7 @@ export const changeEmail = (currentEmail, newEmail) => async dispatch => {
       headers: { 'Content-Type': 'application/json' }
     });
 
-    dispatch(slice.actions.changeEmail('Email changes successfully'));
+    dispatch(slice.actions.changeEmail('Email changed successfully'));
     setTimeout(() => dispatch(slice.actions.clearMessage()), 3000);
   } catch (err) {
     console.log(err);
