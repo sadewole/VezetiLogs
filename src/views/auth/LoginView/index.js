@@ -5,28 +5,17 @@ import {
   Card,
   CardContent,
   CardActions,
-  Chip,
   Container,
   Divider,
   Link,
-  Tooltip,
   Typography,
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Logo from 'src/components/Logo';
 import useAuth from 'src/hooks/useAuth';
-import Auth0Login from './Auth0Login';
 import { ArrowBack } from '@material-ui/icons';
-import FirebaseAuthLogin from './FirebaseAuthLogin';
-// import JWTLogin from './JWTLogin';
 import VezetiLogin from './VezetiLogin';
-
-const methodIcons = {
-  Auth0: '/static/images/auth0.svg',
-  FirebaseAuth: '/static/images/firebase.svg',
-  JWT: '/static/images/jwt.svg'
-};
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -103,9 +92,7 @@ const LoginView = () => {
               </div>
             </Box>
             <Box flexGrow={1} mt={3}>
-              {method === 'Auth0' && <Auth0Login />}
-              {method === 'FirebaseAuth' && <FirebaseAuthLogin />}
-              {method === 'JWT' && <VezetiLogin />}
+              <VezetiLogin />
             </Box>
             <Box my={3}>
               <Divider />

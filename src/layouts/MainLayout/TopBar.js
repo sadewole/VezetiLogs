@@ -8,8 +8,6 @@ import {
   Button,
   Divider,
   Toolbar,
-  Hidden,
-  Typography,
   Link,
   makeStyles
 } from '@material-ui/core';

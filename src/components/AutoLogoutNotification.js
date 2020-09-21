@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import moment from 'moment';
-import Cookies from 'js-cookie';
 import {
   Box,
   Button,
@@ -32,25 +31,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AutoLogoutNotification = () => {
+  const [second, setSecond] = useState();
   const [isOpen, setOpen] = useState(false);
   const classes = useStyles();
   const { isAuthenticated, logout } = useAuth();
+
+  let interval = useRef();
 
   const sessionLogger = useCallback(() => {
     let timeStamp;
     if (isAuthenticated) {
       timeStamp = new Date();
       sessionStorage.setItem('lastTimeStamp', timeStamp);
-    } else {
-      sessionStorage.removeItem('lastTimeStamp');
     }
 
-    // document.addEventListener('click', () => {
-    //   if (isAuthenticated) {
-    //     timeStamp = new Date();
-    //     sessionStorage.setItem('lastTimeStamp', timeStamp);
-    //   }
-    // });
+    if (isAuthenticated && !isOpen) {
+      document.addEventListener('click', () => {
+        timeStamp = new Date();
+        sessionStorage.setItem('lastTimeStamp', timeStamp);
+      });
+    }
   }, [isAuthenticated]);
 
   const handleClose = () => {
@@ -64,6 +64,14 @@ const AutoLogoutNotification = () => {
     timeChecker();
   }, [sessionLogger]);
 
+  useEffect(() => {
+    document.addEventListener('click', () => {
+      if (!isAuthenticated) {
+        sessionStorage.removeItem('lastTimeStamp');
+      }
+    });
+  });
+
   let timeChecker = () => {
     setInterval(() => {
       let storedTimeStamp = sessionStorage.getItem('lastTimeStamp');
@@ -72,36 +80,27 @@ const AutoLogoutNotification = () => {
   };
 
   let timeCompare = timeString => {
-    let check;
-    const maxTime = 2;
-    const popTime = 1;
+    const maxTime = 3;
+    const popTime = 2;
 
-    let currentTime = new Date();
-    let pastTime = new Date(timeString);
-    let timeDiff = currentTime - pastTime;
+    interval = setInterval(() => {
+      const diff = moment.duration(moment().diff(moment(timeString)));
+      const minPast = diff.minutes();
+      const leftSecond = 60 - diff.seconds();
 
-    let minPast = Math.floor(timeDiff / 60000);
+      if (minPast === popTime) {
+        setSecond(leftSecond);
+        setOpen(true);
+      }
 
-    if (minPast === popTime) {
-      check = remSecond(currentTime, pastTime);
-      console.log(check);
-      setOpen(true);
-    }
+      if (minPast === maxTime) {
+        setOpen(false);
+        sessionStorage.removeItem('lastTimeStamp');
+        logout();
 
-    if (minPast === maxTime) {
-      setOpen(false);
-      sessionStorage.removeItem('lastTimeStamp');
-      logout();
-
-      return false;
-    }
-  };
-
-  const remSecond = (date_future, date_now) => {
-    var delta = Math.abs(date_future - date_now) / 1000;
-
-    console.log(delta % 60);
-    return 60 - Math.ceil(delta % 60);
+        return clearInterval(interval);
+      }
+    }, 1000);
   };
 
   if (!isOpen) {
@@ -116,11 +115,11 @@ const AutoLogoutNotification = () => {
         </Typography>
         <Box mt={2} display="flex" justifyContent="space-between">
           <Typography variant="body2">
-            No activity has been made since last 15 minutes. The system is about
+            No activity has been made since last 2 minutes. The system is about
             to log you out. You can disallow this process by clicking the cancel
             button below
           </Typography>
-          <Avatar className={classes.avatar}>01</Avatar>
+          <Avatar className={classes.avatar}>{second}</Avatar>
         </Box>
         <Box mt={2} display="flex" justifyContent="flex-end">
           <Button variant="contained" onClick={handleClose}>
