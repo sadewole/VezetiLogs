@@ -36,23 +36,23 @@ const AutoLogoutNotification = () => {
   const classes = useStyles();
   const { isAuthenticated, logout } = useAuth();
 
-  let timeStamp, warningInactiveInterval, startTimerInterval;
+  let timeStamp;
+  let warningInactiveInterval = useRef();
+  let startTimerInterval = useRef();
 
-  const handleClose = () => {
-    clearInterval(warningInactiveInterval);
-    setOpen(false);
-  };
-
+  // start inactive check
   let timeChecker = () => {
-    startTimerInterval = setInterval(() => {
+    startTimerInterval.current = setTimeout(() => {
       let storedTimeStamp = sessionStorage.getItem('lastTimeStamp');
       warningInactive(storedTimeStamp);
-    }, 1000);
+    }, 60000);
   };
 
+  // warning timer
   let warningInactive = timeString => {
-    clearInterval(startTimerInterval);
-    warningInactiveInterval = setInterval(() => {
+    clearTimeout(startTimerInterval.current);
+
+    warningInactiveInterval.current = setInterval(() => {
       const maxTime = 2;
       const popTime = 1;
 
@@ -66,7 +66,7 @@ const AutoLogoutNotification = () => {
       }
 
       if (minPast === maxTime) {
-        clearInterval(warningInactiveInterval);
+        clearInterval(warningInactiveInterval.current);
         setOpen(false);
         sessionStorage.removeItem('lastTimeStamp');
         logout();
@@ -74,34 +74,47 @@ const AutoLogoutNotification = () => {
     }, 1000);
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      clearInterval(startTimerInterval);
-      timeStamp = new Date();
-      sessionStorage.setItem('lastTimeStamp', timeStamp);
-    }
-
+  // reset interval timer
+  let resetTimer = useCallback(() => {
+    clearInterval(warningInactiveInterval.current);
     window.addEventListener(
       'click',
       e => {
-        e.stopImmediatePropagation();
-        e.stopPropagation();
-
-        if (isAuthenticated && second < 1) {
-          console.log(second);
-
-          clearInterval(warningInactiveInterval);
-
+        if (isAuthenticated) {
           timeStamp = new Date();
           setOpen(false);
           sessionStorage.setItem('lastTimeStamp', timeStamp);
         }
+        timeChecker();
       },
       false
     );
+  }, [isAuthenticated]);
+
+  // handle close popup
+  const handleClose = () => {
+    setOpen(false);
+
+    resetTimer();
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      clearInterval(warningInactiveInterval.current);
+      timeStamp = new Date();
+      sessionStorage.setItem('lastTimeStamp', timeStamp);
+    } else {
+      clearInterval(warningInactiveInterval.current);
+      sessionStorage.removeItem('lastTimeStamp');
+    }
 
     timeChecker();
-  }, [isAuthenticated, isOpen]);
+    resetTimer();
+
+    return () => {
+      clearInterval(startTimerInterval.current);
+    };
+  }, [isAuthenticated]);
 
   useEffect(() => {
     window.addEventListener('click', () => {
