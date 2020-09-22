@@ -31,59 +31,31 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AutoLogoutNotification = () => {
-  const [second, setSecond] = useState();
+  const [second, setSecond] = useState(0);
   const [isOpen, setOpen] = useState(false);
   const classes = useStyles();
   const { isAuthenticated, logout } = useAuth();
 
-  let interval = useRef();
-
-  const sessionLogger = useCallback(() => {
-    let timeStamp;
-    if (isAuthenticated) {
-      timeStamp = new Date();
-      sessionStorage.setItem('lastTimeStamp', timeStamp);
-    }
-
-    if (isAuthenticated && !isOpen) {
-      document.addEventListener('click', () => {
-        timeStamp = new Date();
-        sessionStorage.setItem('lastTimeStamp', timeStamp);
-      });
-    }
-  }, [isAuthenticated]);
+  let timeStamp, warningInactiveInterval, startTimerInterval;
 
   const handleClose = () => {
+    clearInterval(warningInactiveInterval);
     setOpen(false);
-
-    sessionLogger();
   };
-
-  useEffect(() => {
-    sessionLogger();
-    timeChecker();
-  }, [sessionLogger]);
-
-  useEffect(() => {
-    document.addEventListener('click', () => {
-      if (!isAuthenticated) {
-        sessionStorage.removeItem('lastTimeStamp');
-      }
-    });
-  });
 
   let timeChecker = () => {
-    setInterval(() => {
+    startTimerInterval = setInterval(() => {
       let storedTimeStamp = sessionStorage.getItem('lastTimeStamp');
-      timeCompare(storedTimeStamp);
-    }, 3000);
+      warningInactive(storedTimeStamp);
+    }, 1000);
   };
 
-  let timeCompare = timeString => {
-    const maxTime = 3;
-    const popTime = 2;
+  let warningInactive = timeString => {
+    clearInterval(startTimerInterval);
+    warningInactiveInterval = setInterval(() => {
+      const maxTime = 2;
+      const popTime = 1;
 
-    interval = setInterval(() => {
       const diff = moment.duration(moment().diff(moment(timeString)));
       const minPast = diff.minutes();
       const leftSecond = 60 - diff.seconds();
@@ -94,14 +66,50 @@ const AutoLogoutNotification = () => {
       }
 
       if (minPast === maxTime) {
+        clearInterval(warningInactiveInterval);
         setOpen(false);
         sessionStorage.removeItem('lastTimeStamp');
         logout();
-
-        return clearInterval(interval);
       }
     }, 1000);
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      clearInterval(startTimerInterval);
+      timeStamp = new Date();
+      sessionStorage.setItem('lastTimeStamp', timeStamp);
+    }
+
+    window.addEventListener(
+      'click',
+      e => {
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+
+        if (isAuthenticated && second < 1) {
+          console.log(second);
+
+          clearInterval(warningInactiveInterval);
+
+          timeStamp = new Date();
+          setOpen(false);
+          sessionStorage.setItem('lastTimeStamp', timeStamp);
+        }
+      },
+      false
+    );
+
+    timeChecker();
+  }, [isAuthenticated, isOpen]);
+
+  useEffect(() => {
+    window.addEventListener('click', () => {
+      if (!isAuthenticated) {
+        sessionStorage.removeItem('lastTimeStamp');
+      }
+    });
+  });
 
   if (!isOpen) {
     return null;
