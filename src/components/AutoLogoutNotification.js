@@ -80,16 +80,16 @@ const AutoLogoutNotification = () => {
     window.addEventListener(
       'click',
       e => {
+        timeStamp = new Date();
+        setOpen(false);
+        sessionStorage.setItem('lastTimeStamp', timeStamp);
         if (isAuthenticated) {
-          timeStamp = new Date();
-          setOpen(false);
-          sessionStorage.setItem('lastTimeStamp', timeStamp);
         }
-        timeChecker();
       },
       false
     );
-  }, [isAuthenticated]);
+    timeChecker();
+  }, []);
 
   // handle close popup
   const handleClose = () => {
