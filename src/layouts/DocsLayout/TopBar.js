@@ -12,8 +12,9 @@ import {
 } from '@material-ui/core';
 import { Menu as MenuIcon } from 'react-feather';
 import Logo from 'src/components/Logo';
+import useAuth from 'src/hooks/useAuth';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.default,
     color: theme.palette.text.primary,
@@ -30,16 +31,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TopBar = ({ onMobileNavOpen }) => {
+  const { isAuthenticated } = useAuth();
   const classes = useStyles();
 
   return (
     <AppBar className={classes.root}>
       <Toolbar className={classes.toolbar}>
         <Hidden lgUp>
-          <IconButton
-            color="inherit"
-            onClick={onMobileNavOpen}
-          >
+          <IconButton color="inherit" onClick={onMobileNavOpen}>
             <MenuIcon />
           </IconButton>
         </Hidden>
@@ -48,20 +47,31 @@ const TopBar = ({ onMobileNavOpen }) => {
             <Logo />
           </RouterLink>
         </Hidden>
-        <Box
-          ml={2}
-          flexGrow={1}
-        />
-        <Link
-          className={classes.link}
-          color="textSecondary"
-          component={RouterLink}
-          to="/app"
-          underline="none"
-          variant="body2"
-        >
-          Dashboard
-        </Link>
+        <Box ml={2} flexGrow={1} />
+
+        {isAuthenticated ? (
+          <Link
+            className={classes.link}
+            color="textSecondary"
+            component={RouterLink}
+            to="/app"
+            underline="none"
+            variant="body2"
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <Link
+            className={classes.link}
+            color="textSecondary"
+            component={RouterLink}
+            to="/login"
+            underline="none"
+            variant="body2"
+          >
+            Login
+          </Link>
+        )}
       </Toolbar>
     </AppBar>
   );

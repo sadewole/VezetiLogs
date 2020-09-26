@@ -43,7 +43,7 @@ const App = () => {
                 <GoogleAnalytics />
                 <CookiesNotification />
                 <SettingsNotification />
-                <AutoLogoutNotification />
+                <AutoLogoutNotification /> 
                 <NetworkDetector />
                 {renderRoutes(routes)}
               </AuthProvider>
