@@ -46,8 +46,8 @@ const FAQS = ({ className, ...rest }) => {
               </dt>
               <dd>
                 <Typography variant="body1" color="textSecondary">
-                  We use Material-ui&apos;s hooks api as we think it’s the best
-                  way of avoiding clutter.
+                  We use Vezeti hooks api as we think it’s the best way of
+                  avoiding clutter.
                 </Typography>
               </dd>
             </Box>

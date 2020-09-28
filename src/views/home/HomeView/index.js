@@ -7,6 +7,7 @@ import Testimonials from './Testimonials';
 import CTA from './CTA';
 import FAQS from './FAQS';
 import Footer from './Footer';
+import LastestNews from './LatestNews';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -19,6 +20,7 @@ const HomeView = () => {
     <Page className={classes.root} title="Home">
       <Hero />
       <Features />
+      <LastestNews />
       <Testimonials />
       <CTA />
       <FAQS />
