@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }) => {
           }`
         }
       });
-      setTimeout(clearMessage, 5000);
+      setTimeout(clearMessage, 3000);
     } catch (err) {
       console.log(err);
     }
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }) => {
           type: 'MESSAGE',
           payload: { responseMessage }
         });
-        setTimeout(clearMessage, 5000);
+        setTimeout(clearMessage, 3000);
         return;
       }
       setUserStorage(responseData);
@@ -176,7 +176,7 @@ export const AuthProvider = ({ children }) => {
           message: 'User registered successfully '
         }
       });
-      setTimeout(clearMessage, 5000);
+      setTimeout(clearMessage, 3000);
     } catch (err) {
       console.log(err);
     }
