@@ -81,8 +81,8 @@ const AutoLogoutNotification = () => {
       'click',
       e => {
         timeStamp = new Date();
-        setOpen(false);
         sessionStorage.setItem('lastTimeStamp', timeStamp);
+        setOpen(false);
         if (isAuthenticated) {
         }
       },
