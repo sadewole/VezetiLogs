@@ -93,6 +93,7 @@ const AutoLogoutNotification = () => {
 
   // handle close popup
   const handleClose = () => {
+    clearInterval(warningInactiveInterval.current);
     setOpen(false);
 
     resetTimer();
