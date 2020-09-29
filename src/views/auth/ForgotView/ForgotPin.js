@@ -68,11 +68,6 @@ const ForgotPin = () => {
   return (
     <Page className={classes.root} title="Forgot Password">
       <Container className={classes.cardContainer} maxWidth="sm">
-        <Box mb={8} display="flex" justifyContent="center">
-          <RouterLink to="/">
-            <Logo />
-          </RouterLink>
-        </Box>
         <Card>
           <CardContent className={classes.cardContent}>
             <Box
@@ -91,7 +86,9 @@ const ForgotPin = () => {
                 </Typography>
               </div>
               <div className={classes.currentMethodIcon}>
-                <img alt="Auth method" src={methodIcons[method]} />
+                <RouterLink to="/">
+                  <Logo />
+                </RouterLink>
               </div>
             </Box>
             {message && message.length ? (

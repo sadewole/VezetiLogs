@@ -18,6 +18,7 @@ import {
 } from '@material-ui/core';
 import useAuth from 'src/hooks/useAuth';
 import Label from 'src/components/Label';
+import { currencyFormatter } from 'src/utils/formatter';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -134,7 +135,7 @@ const General = ({ className, ...rest }) => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" color="textSecondary">
-                        {user.currency3Letters} {user.userAccountBalance}
+                        {currencyFormatter(user.userAccountBalance)}
                       </Typography>
                     </TableCell>
                   </TableRow>

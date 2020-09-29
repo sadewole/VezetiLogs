@@ -53,11 +53,7 @@ const Features = ({ className, ...rest }) => {
                     Vezeti’s virtual number is a phone number that clients all
                     over the world can use to call your business at no cost to
                     them if you want a toll free 0800 number or a 01-888 number
-                    if you want them to pay for the call. By activating a
-                    virtual number today, you can expand your business presence
-                    to any one of TollFreeForwarding’s 120+ business-boosting
-                    destinations around the globe. This service is applicable to
-                    only inbound calls only to the Vezeti network.
+                    if you want them to pay for the call.
                   </Typography>
                 </Box>
               </Box>
@@ -74,9 +70,7 @@ const Features = ({ className, ...rest }) => {
                     Unified Communication Connection. A call handler can answer
                     calls, take messages, be part of an auto-attendant, play a
                     recorded announcement, and transfer calls to users or other
-                    call handlers in your company. Vezeti call handler enables
-                    your business route calls effectively amongst the various
-                    departments with the touch of professionalism.
+                    call handlers in your company.
                   </Typography>
                 </Box>
               </Box>
@@ -91,11 +85,7 @@ const Features = ({ className, ...rest }) => {
                   <Typography variant="body1" color="textPrimary" gutterBottom>
                     The Vezeti Sip/GSM Extension is a very smart feature of the
                     Vezeti business phone system used by the mobile
-                    Entrepreneurs and the businessman on the move. This
-                    Extension can ring on your sip device or your GSM line
-                    without the caller realizing you have picked your extension
-                    on your GSM line. So while you are in Nigeria or roaming
-                    abroad, your office extension will ring on your GSM line.
+                    Entrepreneurs and the businessman on the move.
                   </Typography>
                   {/* <Button
                     variant="outlined"
