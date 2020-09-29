@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const AutoLogoutNotification = () => {
+  const events = ['click', 'load', 'scroll'];
   const [second, setSecond] = useState(0);
   const [isOpen, setOpen] = useState(false);
   const classes = useStyles();
@@ -76,54 +77,39 @@ const AutoLogoutNotification = () => {
 
   // reset interval timer
   let resetTimer = useCallback(() => {
+    clearTimeout(startTimerInterval.current);
     clearInterval(warningInactiveInterval.current);
-    window.addEventListener(
-      'click',
-      e => {
-        timeStamp = new Date();
-        sessionStorage.setItem('lastTimeStamp', timeStamp);
-        setOpen(false);
-        if (isAuthenticated) {
-        }
-      },
-      false
-    );
-    timeChecker();
-  }, []);
 
-  // handle close popup
-  const handleClose = () => {
-    clearInterval(warningInactiveInterval.current);
-    setOpen(false);
-
-    resetTimer();
-  };
-
-  useEffect(() => {
     if (isAuthenticated) {
-      clearInterval(warningInactiveInterval.current);
       timeStamp = new Date();
       sessionStorage.setItem('lastTimeStamp', timeStamp);
     } else {
       clearInterval(warningInactiveInterval.current);
       sessionStorage.removeItem('lastTimeStamp');
     }
-
     timeChecker();
-    resetTimer();
-
-    return () => {
-      clearInterval(startTimerInterval.current);
-    };
+    setOpen(false);
   }, [isAuthenticated]);
 
+  // handle close popup
+  const handleClose = () => {
+    setOpen(false);
+
+    resetTimer();
+  };
+
   useEffect(() => {
-    window.addEventListener('click', () => {
-      if (!isAuthenticated) {
-        sessionStorage.removeItem('lastTimeStamp');
-      }
+    events.forEach(event => {
+      window.addEventListener(event, resetTimer);
     });
-  });
+
+    timeChecker();
+
+    return () => {
+      clearTimeout(startTimerInterval.current);
+      resetTimer();
+    };
+  }, [resetTimer]);
 
   if (!isOpen) {
     return null;
